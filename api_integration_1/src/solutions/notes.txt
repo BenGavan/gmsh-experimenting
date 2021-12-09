@@ -1,0 +1,48 @@
+Two main solutions (without having to modify the mesh directly)
+ 1) - using the call back "gmsh::model::mesh::setSizeCallback(meshSizeCallback);" to get target mesh size for specific
+ coordinates
+    - to generate the target mesh size, split original mesh into cubes so that the points contributing to the search
+    coordinate are inside (or in cubes/cells adjacent) (this is used to aid in searching for the relevant data points)
+    - since the splitting/discretization is uniform, can calculate which cell the search coordinate is in
+    - get relevant points (if needed, go to adjacent (8) cells)
+    - interpolate based on the x closest points/nodes (maybe take then closest left, closest right, closest top, etc)
+
+ 1b) - (could also split the original mesh into cubes, then assign each cube the value determines by  points inside/around.
+ If no points inside cell, can either increase cell size or interpolate/average from surrounding cells)
+
+
+ 2) - use the  "background mesh" outlined in t7.cpp
+    - i.e. generate the .pos file/field (probably by interpolating between nodes/data points or by splitting the mesh
+    into cells), then apply to  the mesh.
+
+
+
+
+Sources:
+ - http://gmsh.info/dev/doc/texinfo/gmsh.txt
+           Scalar point                  SP    3            1  * NB-TIME-STEPS
+           Vector point                  VP    3            3  * NB-TIME-STEPS
+           Tensor point                  TP    3            9  * NB-TIME-STEPS
+           Scalar line                   SL    6            2  * NB-TIME-STEPS
+           Vector line                   VL    6            6  * NB-TIME-STEPS
+           Tensor line                   TL    6            18 * NB-TIME-STEPS
+           Scalar triangle               ST    9            3  * NB-TIME-STEPS
+           Vector triangle               VT    9            9  * NB-TIME-STEPS
+           Tensor triangle               TT    9            27 * NB-TIME-STEPS
+           Scalar quadrangle             SQ    12           4  * NB-TIME-STEPS
+           Vector quadrangle             VQ    12           12 * NB-TIME-STEPS
+           Tensor quadrangle             TQ    12           36 * NB-TIME-STEPS
+           Scalar tetrahedron            SS    12           4  * NB-TIME-STEPS
+           Vector tetrahedron            VS    12           12 * NB-TIME-STEPS
+           Tensor tetrahedron            TS    12           36 * NB-TIME-STEPS
+           Scalar hexahedron             SH    24           8  * NB-TIME-STEPS
+           Vector hexahedron             VH    24           24 * NB-TIME-STEPS
+           Tensor hexahedron             TH    24           72 * NB-TIME-STEPS
+           Scalar prism                  SI    18           6  * NB-TIME-STEPS
+           Vector prism                  VI    18           18 * NB-TIME-STEPS
+           Tensor prism                  TI    18           54 * NB-TIME-STEPS
+           Scalar pyramid                SY    15           5  * NB-TIME-STEPS
+           Vector pyramid                VY    15           15 * NB-TIME-STEPS
+           Tensor pyramid                TY    15           45 * NB-TIME-STEPS
+           2D text                       T2    3            arbitrary
+           3D text                       T3    4            arbitrary

@@ -1,0 +1,3 @@
+
+Takes in the initial .msh file (not meshed, just the structure) and the initial .pos file to specify initial mesh.
+It then reconstructs a refined mesh using a target size field using the structure of the adapted mesh.

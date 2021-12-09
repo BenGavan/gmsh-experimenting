@@ -1,0 +1,42 @@
+// make background mesh
+// Returns view tag
+int add_refined_mesh_to_gmsh(vector<Element> &elements)
+{
+    // create a new view to be sued as the adapted target size mesh
+    int view_tag = gmsh::view::add("adapted target size mesh");
+
+//    vector<double> list_data(elements.size()*16);
+    vector<double> list_data;
+
+    for (unsigned e_i=0; e_i<elements.size(); e_i++)
+    {
+        Element e(elements[e_i]);
+
+        vector<double> tet_coords(12); // 4 nodes * 3 coords (x1, ..., x4, y1, ...,y4, z1, ..., z4)
+        vector<double> tet_target_sizes(4);
+        for (unsigned i=0; i<e.nodes.size(); i++)
+        {
+            for (unsigned j=0; j<3; j++)
+            {
+                tet_coords[i + 4*j] = e.nodes[i].coord[j];
+            }
+        }
+
+        for (unsigned i=0; i<e.nodes.size(); i++)
+        {
+            tet_target_sizes[i] = e.linear_target_size;
+        }
+
+        list_data.insert(list_data.end(), tet_coords.begin(), tet_coords.end());
+        list_data.insert(list_data.end(), tet_target_sizes.begin(), tet_target_sizes.end());
+    }
+
+    gmsh::view::addListData(view_tag, "SS", elements.size(), list_data);
+
+    int field_tag = gmsh::model::mesh::field::add("PostView");
+    gmsh::model::mesh::field::setNumber(field_tag, "ViewTag", view_tag);
+
+//    gmsh::view::write(view_tag, "refined_bgmsh.pos");
+
+    return field_tag;
+}

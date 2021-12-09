@@ -1,0 +1,92 @@
+
+msh file format notes:
+ - http://www.manpagez.com/info/gmsh/gmsh-2.2.6/gmsh_63.php
+
+
+
+Mesh sizes can be specified very accurately by providing a background mesh [t7]
+ - a post-processing view that contains the target mesh sizes.
+
+
+Ways to specify target mesh sizes:
+ - target mesh sizes at the points of the geometry (t1)
+ - background mesh (special case of general "mesh size fields") (t7)
+ - general mesh size Fields (t10)
+
+
+Element Types - http://www.manpagez.com/info/gmsh/gmsh-2.2.6/gmsh_63.php - A small selection:
+1 = 2-node line
+2 = 3-node triangle
+3 = 4-node quadrangle
+4 = 4-node tetrahedron
+5 = 8-node hexahedron
+6 = 6-node prism
+7 = 5-node pyramid
+
+
+PostView
+Structured
+
+
+TODO: add the ability for user to supply initial starting mesh (in the form of a .pos file) then refine it according to error, then recombine by using both by using a MIN field so the smallest target size is always used.
+
+
+Ideas:
+ - For the grid implementation, use an octree instead
+   - Could also be used as h(x,y,z)
+
+
+------------------------------------------------------------------------------
+Summary so far:
+Two main ways to specifiy target mesh element size (which are somewhat equivalent):
+ 1) Specify a background mesh/szie field
+ 2) define a target size function h(x,y,x)
+
+Benifits of (1):
+ - 
+
+Downsides of (2):
+ - less control over interpolation (still need to look into interpolation matrices)
+ - less control of target size weighting
+
+Benifits of (2):
+ - complete control of target size 
+ - complete control of interpolation
+ - complete control of weighting
+
+Downsides of (2):
+ - 
+
+Implemented so far:
+ - 1st implementation of (1): use the pre-refined mesh as the sturcture to consturct the refined target size background mesh on
+   - can also use the minimum of the refined mesh and the initial mesh
+ 
+Still need to implement:
+ - Find an explicit mathematical expression for h(x,y,z) then pass it to mesh field "MathEval"
+ - 
+
+
+
+Three mains ways:
+ - background field
+ - expilicit mathematical function
+ - our own code function on the fly for each point using the data grid (or octree)  
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+Possible solutions:
+ - generate error and/or target mesh size field, then use getMeshSizeForCoord/callback to tell the mesh generator
+ desired mesh size at that point.
+
+Questions:
+ - How to calculate the error at the old node points?
+ - How to convert the discrete locations of errors to a continuum of errors?
+ - How to map the error to target mesh size?
+ - What discretization shape is being used?
+
+
+TODO:
+ - How to generate .pos files ("background mesh").
+ - What format will the error be in

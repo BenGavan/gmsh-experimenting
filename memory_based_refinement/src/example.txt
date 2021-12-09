@@ -1,0 +1,60 @@
+class A {
+public:
+    virtual double calculate_something() = 0;
+    virtual ~A() {};  // or 'virtual ~Parent() = default;'
+};
+
+class B : public A {
+public:
+    B(int b);
+    double calculate_something() override {
+        return 1.234567;
+    }
+    int b;
+};
+
+B::B(int b) {
+    this->b = b;
+}
+
+class C: public A {
+public:
+    C(double v1, double v2);
+    double calculate_something() override {
+        return v1*v2;
+    }
+    double v1;
+    double v2;
+};
+
+
+C::C(double v1, double v2) {
+    this->v1 = v1;
+    this->v2 = v2;
+}
+
+
+
+///
+int main() {
+    B b(3);
+
+    cout << b.aV << endl;
+
+    C c(1.3, 5.7);
+
+    // Both B and C are children of A (inherited from A)
+
+    vector<A*> a_vec;
+    a_vec.push_back(&b);
+    a_vec.push_back(&c);
+
+    cout << "a_vec.size() = " << a_vec.size() << endl;
+
+    for (unsigned i=0; i<a_vec.size(); i++)
+    {
+        cout << a_vec[i] << " " << i << ": " << a_vec[i]->calculate_something() << endl;
+    }
+
+    return 0;
+}

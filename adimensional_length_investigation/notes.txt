@@ -1,0 +1,7 @@
+Mesh element/edge size will depend on:
+ - Where in the mesh
+   - on the surface
+     - depends on the curvature of the
+   - distance to vertex
+     - angle of vertex
+ - Quality of mesh element the edge is included in (and other mesh element properties)
